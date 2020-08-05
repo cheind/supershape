@@ -1,5 +1,5 @@
 # supershape
-Minimal efficient Python code to generate  [3D SuperShapes](https://en.wikipedia.org/wiki/Superformula). Comes with additional support for Blender mesh generation.
+Python code to efficiently generate  [3D SuperShapes](https://en.wikipedia.org/wiki/Superformula). Comes with additional support for Blender mesh generation.
 
 3D SuperShapes are a family of parametric surfaces that can take on a variety of shapes depending on the parametrization. The following snippet creates 3D coordinates of a flower-like object
 ```python
