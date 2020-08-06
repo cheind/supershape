@@ -3,9 +3,12 @@ Python code to efficiently generate  [3D SuperShapes](https://en.wikipedia.org/w
 
 3D SuperShapes are a family of parametric surfaces that can take on a variety of shapes depending on the parametrization. The following snippet creates 3D coordinates of a flower-like object
 ```python
-from supershape import create3d
-x,y,z = create3d(
+import supershape as sshape
+
+x,y,z = sshape.supercoords(
+    # m, a, b, n1, n2, n3
     [7, 1, 1, 0.2, 1.7, 1.7], 
+    # u,v resolution
     shape=(50,50)
 )
 ```
@@ -14,14 +17,17 @@ x,y,z = create3d(
   <img  src="etc/flower.png">
 </p>
 
-Run
+To reproduce the above result, run
 ```
-python supershape.py
+python -m supershape
 ```
-to reproduce the above result. See [supershape.py](supershape.py) for details.
 
 ### Blender support
-Run content of [supershape.py](supershape.py) in Blender (>=v2.8) to get
+Launch Blender (>=v2.8) as follows
+```
+blender --python-use-system-env --python scripts\blender_demo.py
+```
+to get 
 <p align="center">
   <img  src="etc/flower_blender.png">
 </p>
