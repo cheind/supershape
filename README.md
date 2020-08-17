@@ -23,7 +23,7 @@ python -m supershape
 ```
 
 ### Blender support
-Launch Blender (>=v2.8) as follows
+Add the cloned folder path to your `PYTONPATH`, then launch Blender (>=v2.8) as follows
 ```
 blender --python-use-system-env --python scripts\blender_demo.py
 ```
