@@ -5,7 +5,7 @@ if SUPERSHAPE_BLENDER:
     import bpy 
     import bmesh
 
-    def make_bpy_mesh(x,y,z):
+    def make_bpy_mesh(shape):
         '''Create a Blender (>2.8) mesh from supershape coordinates.
 
         Adapted from
@@ -13,23 +13,15 @@ if SUPERSHAPE_BLENDER:
         
         Params
         ------
-        x: UxV array
-            x coordinates for each long/lat point
-        y: UxV array
-            y coordinates for each long/lat point
-        z: UxV array
-            z coordinates for each long/lat point
-        obj: bpy.types.Object
-            Optional object to update, instead of creating a new one.
-            Note that the long./lat. resolution must match.
+        shape : tuple
+            long./lat. resolution of supershape
         
         Returns
         -------
         obj: bpy.types.Object
             Mesh object build from quads.
         '''
-        # create quads
-        U,V = x.shape
+        U,V = shape
         faces = []
         for u in range(U-1):
             for v in range(V-1):
@@ -38,7 +30,7 @@ if SUPERSHAPE_BLENDER:
                 C = (u+1)*V + (v+1)
                 D = (u+1)*V + v
                 faces.append((A,B,C,D))
-        verts = np.stack((x,y,z), -1).reshape(-1, 3)
+        verts = np.zeros((U*V,3), dtype=np.float32)
         mesh = bpy.data.meshes.new('supershape')
         mesh.from_pydata(verts.tolist(), [], faces)
         mesh.update(calc_edges=True)
@@ -47,7 +39,6 @@ if SUPERSHAPE_BLENDER:
         for p in mesh.polygons:
             p.use_smooth = True
         return obj
-        
 
     def update_bpy_mesh(x, y, z, obj):
         '''Update a Blender (>2.8) mesh from supershape coordinates.

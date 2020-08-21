@@ -59,8 +59,8 @@ def supercoords(params, shape=(50,50)):
         np.abs(np.sin(sp[0]*alpha/4.)/sp[2])**sp[5]
     )**(-1/sp[3])
 
-    u = np.linspace(-np.pi, np.pi, shape[0])     # long, theta
-    v = np.linspace(-np.pi/2, np.pi/2, shape[1]) # lat, phi
+    u = np.linspace(-np.pi, np.pi, shape[0]) # long., theta
+    v = np.linspace(-np.pi/2, np.pi/2, shape[1]) # lat., phi
         
     g = np.meshgrid(v, u)
     uv = np.stack((g[1],g[0]),-1)
@@ -72,21 +72,3 @@ def supercoords(params, shape=(50,50)):
     z = r2 * np.sin(v)[None, :]
 
     return x,y,z
-        
-
-# def main_bpy():
-#     '''Entry point for visualization in Blender'''
-
-#     # Create shape
-#     shape=(100, 100)
-#     x,y,z = create3d(FLOWER, shape=shape)
-
-#     # Create mesh and show
-#     obj = bpy_mesh(x,y,z)
-
-# if __name__ == '__main__':
-#     try:
-#         import bpy
-#         main_bpy()
-#     except ModuleNotFoundError:
-#         plain_main()

@@ -6,5 +6,6 @@ bpy.data.objects.remove(bpy.data.objects['Cube'], do_unlink=True)
 
 # Generate mesh
 shape=(100,100)
-x,y,z = sshape.supercoords(sshape.FLOWER, shape=shape)
-obj = sshape.make_bpy_mesh(x,y,z)
+obj = sshape.make_bpy_mesh(shape)
+x,y,z = sshape.supercoords(sshape.SPHERE, shape=shape)
+sshape.update_bpy_mesh(x, y, z, obj)
