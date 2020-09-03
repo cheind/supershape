@@ -5,7 +5,7 @@ if SUPERSHAPE_BLENDER:
     import bpy 
     import bmesh
 
-    def make_bpy_mesh(shape):
+    def make_bpy_mesh(shape, name='supershape', coll=None, smooth=True):
         '''Create a Blender (>2.8) mesh from supershape coordinates.
 
         Adapted from
@@ -20,6 +20,13 @@ if SUPERSHAPE_BLENDER:
         -------
         obj: bpy.types.Object
             Mesh object build from quads.
+        name: str
+            Name of object.
+        coll: bpy collection
+            Collection to link object to. If None,
+            default collection is used.
+        smooth: bool
+            Smooth or flat rendering.
         '''
         U,V = shape
         faces = []
@@ -31,13 +38,15 @@ if SUPERSHAPE_BLENDER:
                 D = (u+1)*V + v
                 faces.append((A,B,C,D))
         verts = np.zeros((U*V,3), dtype=np.float32)
-        mesh = bpy.data.meshes.new('supershape')
+        mesh = bpy.data.meshes.new(name)
         mesh.from_pydata(verts.tolist(), [], faces)
         mesh.update(calc_edges=True)
-        obj = bpy.data.objects.new('supershape', mesh)
-        bpy.context.collection.objects.link(obj)
+        obj = bpy.data.objects.new(name, mesh)
+        if coll is None: 
+            coll = bpy.context.collection    
+        coll.objects.link(obj)
         for p in mesh.polygons:
-            p.use_smooth = True
+            p.use_smooth = smooth
         return obj
 
     def update_bpy_mesh(x, y, z, obj):
