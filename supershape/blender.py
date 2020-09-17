@@ -24,7 +24,8 @@ if SUPERSHAPE_BLENDER:
             Name of object.
         coll: bpy collection
             Collection to link object to. If None,
-            default collection is used.
+            default collection is used. If False, object is not
+            added to any collection.
         smooth: bool
             Smooth or flat rendering.
         '''
@@ -46,8 +47,9 @@ if SUPERSHAPE_BLENDER:
         obj = bpy.data.objects.new(name, mesh)        
         del mesh
         if coll is None: 
-            coll = bpy.context.collection    
-        coll.objects.link(obj) 
+            coll = bpy.context.collection
+        if coll is not False:    
+            coll.objects.link(obj)
         return obj
 
     def update_bpy_mesh(x, y, z, obj):
@@ -69,11 +71,11 @@ if SUPERSHAPE_BLENDER:
             Note that the long./lat. resolution must match.
         '''
         import bmesh
-        x = x.reshape(-1)
-        y = y.reshape(-1)
-        z = z.reshape(-1)   
-        for idx, v in enumerate(obj.data.vertices):
-            v.co = (x[idx], y[idx], z[idx])
+        x = x.reshape(-1,1)
+        y = y.reshape(-1,1)
+        z = z.reshape(-1,1)
+        flat = np.concatenate((x,y,z),-1)
+        obj.data.vertices.foreach_set("co", flat.reshape(-1))
         
         # Update normals
         bm = bmesh.new()
@@ -83,6 +85,7 @@ if SUPERSHAPE_BLENDER:
         bm.clear()
         obj.data.update()
         bm.free()
+        del bm
 else:
     def make_bpy_mesh(x,y,z):
         raise ValueError('Not called from within Blender.')
