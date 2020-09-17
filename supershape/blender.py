@@ -41,12 +41,13 @@ if SUPERSHAPE_BLENDER:
         mesh = bpy.data.meshes.new(name)
         mesh.from_pydata(verts.tolist(), [], faces)
         mesh.update(calc_edges=True)
-        obj = bpy.data.objects.new(name, mesh)
-        if coll is None: 
-            coll = bpy.context.collection    
-        coll.objects.link(obj)
         for p in mesh.polygons:
             p.use_smooth = smooth
+        obj = bpy.data.objects.new(name, mesh)        
+        del mesh
+        if coll is None: 
+            coll = bpy.context.collection    
+        coll.objects.link(obj) 
         return obj
 
     def update_bpy_mesh(x, y, z, obj):
