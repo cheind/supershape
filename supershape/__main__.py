@@ -2,10 +2,21 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 import supershape as sshape
+import numpy as np
 
 # Create shape
 shape=(50,50)
-x,y,z = sshape.supercoords(sshape.FLOWER, shape=shape)
+
+with np.errstate(divide='raise'):
+    for i in range(500000):
+        params = np.random.uniform(
+            low =[0.00,1,1,0.0,0.0, 0.0],
+            high=[20.00,1,1,40,10.0,10.0],
+            size=(2,6)
+        ).astype(np.float32)
+        print(params)
+        x,y,z = sshape.supercoords(params, shape=shape)
+
 
 # Plot it
 fig = plt.figure(figsize=(6,6), frameon=False)

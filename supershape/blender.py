@@ -4,6 +4,7 @@ from . import SUPERSHAPE_BLENDER
 if SUPERSHAPE_BLENDER:
     import bpy 
     import bmesh
+    from mathutils import Vector
 
     def make_bpy_mesh(shape, name='supershape', coll=None, smooth=True):
         '''Create a Blender (>2.8) mesh from supershape coordinates.
@@ -30,20 +31,35 @@ if SUPERSHAPE_BLENDER:
             Smooth or flat rendering.
         '''
         U,V = shape
-        faces = []
+        xy = np.stack(np.meshgrid(np.linspace(0,1,V),np.linspace(0,1,U)),-1).astype(np.float32)
+        vertices = np.concatenate((xy, np.zeros((U,V,1), dtype=np.float32)), -1).reshape(-1,3)
+
+        # Vertices
+        bm = bmesh.new()
+        for v in vertices:
+            bm.verts.new(Vector(v))
+        bm.verts.ensure_lookup_table() # Required after adding / removing vertices and before accessing them by index.
+        bm.verts.index_update()  # Required to actually retrieve the indices later on (or they stay -1).
+        # Faces
         for u in range(U-1):
             for v in range(V-1):
                 A = u*V + v
                 B = u*V + (v+1)
                 C = (u+1)*V + (v+1)
                 D = (u+1)*V + v
-                faces.append((A,B,C,D))
-        verts = np.zeros((U*V,3), dtype=np.float32)
+                bm.faces.new((bm.verts[D], bm.verts[C], bm.verts[B], bm.verts[A]))
+        # UV
+        uv_layer = bm.loops.layers.uv.new()
+        for face in bm.faces:
+            for loop in face.loops:
+                v,u = vertices[loop.vert.index][:2]
+                loop[uv_layer].uv = (u,1.-v)
+
+        bm.normal_update()
         mesh = bpy.data.meshes.new(name)
-        mesh.from_pydata(verts.tolist(), [], faces)
-        mesh.update(calc_edges=True)
-        for p in mesh.polygons:
-            p.use_smooth = smooth
+        bm.to_mesh(mesh)
+        bm.free()
+
         obj = bpy.data.objects.new(name, mesh)        
         del mesh
         if coll is None: 
