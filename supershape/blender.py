@@ -60,6 +60,10 @@ if SUPERSHAPE_BLENDER:
         bm.to_mesh(mesh)
         bm.free()
 
+        if smooth:
+            for f in mesh.polygons:
+                f.use_smooth = True
+
         obj = bpy.data.objects.new(name, mesh)        
         del mesh
         if coll is None: 
