@@ -6,7 +6,7 @@ if SUPERSHAPE_BLENDER:
     import bmesh
     from mathutils import Vector
 
-    def make_bpy_mesh(shape, name='supershape', coll=None, smooth=True):
+    def make_bpy_mesh(shape, name='supershape', coll=None, smooth=True, weld=False):
         '''Create a Blender (>2.8) mesh from supershape coordinates.
 
         Adapted from
@@ -29,6 +29,10 @@ if SUPERSHAPE_BLENDER:
             added to any collection.
         smooth: bool
             Smooth or flat rendering.
+        weld: bool, optional
+            Whether to add a weld-modifier to the mesh. The weld modifier
+            closes geometry seams by merging duplicate vertices. Defaults to
+            false.
         '''
         U, V = shape
         xy = np.stack(np.meshgrid(np.linspace(0, 1, V),
@@ -71,10 +75,15 @@ if SUPERSHAPE_BLENDER:
 
         obj = bpy.data.objects.new(name, mesh)
         del mesh
+
+        if weld:
+            mod = obj.modifiers.new("CloseSeams", 'WELD')
+            mod.merge_threshold = 1e-3
         if coll is None:
             coll = bpy.context.collection
         if coll is not False:
             coll.objects.link(obj)
+
         return obj
 
     def update_bpy_mesh(x, y, z, obj):
