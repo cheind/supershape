@@ -104,7 +104,9 @@ if SUPERSHAPE_BLENDER:
         # Update normals
         bm = bmesh.new()
         bm.from_mesh(obj.data)
-        #bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-3)
+        # Instead of closing seams at data level through
+        # bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-3)
+        # use a weld mesh modifier.
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.to_mesh(obj.data)
         bm.clear()
