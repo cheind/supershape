@@ -2,7 +2,7 @@ import numpy as np
 from . import SUPERSHAPE_BLENDER
 
 if SUPERSHAPE_BLENDER:
-    import bpy 
+    import bpy
     import bmesh
     from mathutils import Vector
 
@@ -11,12 +11,12 @@ if SUPERSHAPE_BLENDER:
 
         Adapted from
         http://wiki.theprovingground.org/blender-py-supershape
-        
+
         Params
         ------
         shape : tuple
             long./lat. resolution of supershape
-        
+
         Returns
         -------
         obj: bpy.types.Object
@@ -30,16 +30,20 @@ if SUPERSHAPE_BLENDER:
         smooth: bool
             Smooth or flat rendering.
         '''
-        U,V = shape
-        xy = np.stack(np.meshgrid(np.linspace(0,1,V),np.linspace(0,1,U)),-1).astype(np.float32)
-        vertices = np.concatenate((xy, np.zeros((U,V,1), dtype=np.float32)), -1).reshape(-1,3)
+        U, V = shape
+        xy = np.stack(np.meshgrid(np.linspace(0, 1, V),
+                                  np.linspace(0, 1, U)), -1).astype(np.float32)
+        vertices = np.concatenate(
+            (xy, np.zeros((U, V, 1), dtype=np.float32)), -1).reshape(-1, 3)
 
         # Vertices
         bm = bmesh.new()
         for v in vertices:
             bm.verts.new(Vector(v))
-        bm.verts.ensure_lookup_table() # Required after adding / removing vertices and before accessing them by index.
-        bm.verts.index_update()  # Required to actually retrieve the indices later on (or they stay -1).
+        # Required after adding / removing vertices and before accessing them by index.
+        bm.verts.ensure_lookup_table()
+        # Required to actually retrieve the indices later on (or they stay -1).
+        bm.verts.index_update()
         # Faces
         for u in range(U-1):
             for v in range(V-1):
@@ -47,13 +51,14 @@ if SUPERSHAPE_BLENDER:
                 B = u*V + (v+1)
                 C = (u+1)*V + (v+1)
                 D = (u+1)*V + v
-                bm.faces.new((bm.verts[D], bm.verts[C], bm.verts[B], bm.verts[A]))
+                bm.faces.new((bm.verts[D], bm.verts[C],
+                              bm.verts[B], bm.verts[A]))
         # UV
         uv_layer = bm.loops.layers.uv.new()
         for face in bm.faces:
             for loop in face.loops:
-                v,u = vertices[loop.vert.index][:2]
-                loop[uv_layer].uv = (u,1.-v)
+                v, u = vertices[loop.vert.index][:2]
+                loop[uv_layer].uv = (u, 1.-v)
 
         bm.normal_update()
         mesh = bpy.data.meshes.new(name)
@@ -64,11 +69,11 @@ if SUPERSHAPE_BLENDER:
             for f in mesh.polygons:
                 f.use_smooth = True
 
-        obj = bpy.data.objects.new(name, mesh)        
+        obj = bpy.data.objects.new(name, mesh)
         del mesh
-        if coll is None: 
+        if coll is None:
             coll = bpy.context.collection
-        if coll is not False:    
+        if coll is not False:
             coll.objects.link(obj)
         return obj
 
@@ -77,7 +82,7 @@ if SUPERSHAPE_BLENDER:
 
         Adapted from
         http://wiki.theprovingground.org/blender-py-supershape
-        
+
         Params
         ------
         x: UxV array
@@ -87,19 +92,19 @@ if SUPERSHAPE_BLENDER:
         z: UxV array
             z coordinates for each long/lat point
         obj: bpy.types.Object
-            Optional object to update, instead of creating a new one.
-            Note that the long./lat. resolution must match.
+            Object to update. Note that the long./lat. resolution must match.
         '''
         import bmesh
-        x = x.reshape(-1,1)
-        y = y.reshape(-1,1)
-        z = z.reshape(-1,1)
-        flat = np.concatenate((x,y,z),-1)
+        x = x.reshape(-1, 1)
+        y = y.reshape(-1, 1)
+        z = z.reshape(-1, 1)
+        flat = np.concatenate((x, y, z), -1)
         obj.data.vertices.foreach_set("co", flat.reshape(-1))
-        
+
         # Update normals
         bm = bmesh.new()
         bm.from_mesh(obj.data)
+        #bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-3)
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.to_mesh(obj.data)
         bm.clear()
@@ -107,8 +112,8 @@ if SUPERSHAPE_BLENDER:
         bm.free()
         del bm
 else:
-    def make_bpy_mesh(x,y,z):
+    def make_bpy_mesh(x, y, z):
         raise ValueError('Not called from within Blender.')
 
-    def update_bpy_mesh(x,y,z,obj):
+    def update_bpy_mesh(x, y, z, obj):
         raise ValueError('Not called from within Blender.')
