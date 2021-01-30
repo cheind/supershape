@@ -9,10 +9,11 @@ with open(THISDIR/'README.md', encoding='utf-8') as f:
 setup(
     name='supershape',
     author='Christoph Heindl',
-    description='Python code to efficiently generate supershapes.',
+    description='Python code to efficiently generate supershapes. Additional Blender support.',
     url='https://github.com/cheind/supershape',
     packages=['supershape'],
-    version=open(THISDIR/'supershape'/'__init__.py').readlines()[-1].split()[-1].strip('\''),
+    version=open(THISDIR/'supershape' /
+                 '__init__.py').readlines()[-1].split()[-1].strip('\''),
     install_requires=['numpy'],
     long_description=long_description,
     long_description_content_type='text/markdown',

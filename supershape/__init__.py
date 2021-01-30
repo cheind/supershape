@@ -15,6 +15,6 @@ ROUNDCUBE = [4, 1., 1., 10., 10., 10.]
 '''Predefined params of a flower-like object'''
 FLOWER = [7, 1, 1, 0.2, 1.7, 1.7]
 '''Predefined params of a cone-like object'''
-CONE = [[4, 1, 1, 100, 1, 1],[4, 1, 1, 1, 1, 1]]
+CONE = [[4, 1, 1, 100, 1, 1], [4, 1, 1, 1, 1, 1]]
 
-__VERSION__ = '1.0.0'
+__VERSION__ = '1.1.0'
