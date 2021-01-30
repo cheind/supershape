@@ -6,7 +6,7 @@ Python code to efficiently generate  [3D SuperShapes](https://en.wikipedia.org/w
 import supershape as sshape
 
 x,y,z = sshape.supercoords(
-    # m, a, b, n1, n2, n3
+    # m, a, b, n1, n2, n3 (1x6 or 2x6)
     [7, 1, 1, 0.2, 1.7, 1.7], 
     # u,v resolution
     shape=(50,50)

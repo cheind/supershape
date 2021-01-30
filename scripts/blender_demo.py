@@ -4,7 +4,7 @@ import supershape as sshape
 # Remove default cube
 bpy.data.objects.remove(bpy.data.objects['Cube'], do_unlink=True)
 
-# Generate mesh
+# Generate supershape
 shape = (100, 100)
 obj = sshape.make_bpy_mesh(shape, weld=True)
 x, y, z = sshape.supercoords(sshape.FLOWER, shape=shape)
