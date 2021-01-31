@@ -22,6 +22,13 @@ To reproduce the above result, run
 python -m supershape
 ```
 
+## Install
+Via `pip`
+
+```
+pip install supershape
+```
+
 ## Blender support
 Add the cloned folder path to your `PYTONPATH`, then launch Blender (>=v2.8) as follows
 ```
@@ -31,6 +38,8 @@ to get
 <p align="center">
   <img  src="etc/flower_blender.png">
 </p>
+
+To avoid modifying your `PYTHONPATH`, you can may install `supershape` into the Blender Python environment. See [this script](https://github.com/cheind/pytorch-blender/blob/eb2793e4ad90d3dd8210724feec5021d773f6beb/scripts/install_btb.py) for example.
 
 ## Releases
 Tags on master are pushed as releases to PyPi. 
