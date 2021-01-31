@@ -22,7 +22,7 @@ To reproduce the above result, run
 python -m supershape
 ```
 
-### Blender support
+## Blender support
 Add the cloned folder path to your `PYTONPATH`, then launch Blender (>=v2.8) as follows
 ```
 blender --python-use-system-env --python scripts\blender_demo.py
@@ -31,3 +31,11 @@ to get
 <p align="center">
   <img  src="etc/flower_blender.png">
 </p>
+
+## Releases
+Tags on master are pushed as releases to PyPi. 
+1. Version bump
+1. Commit push and await build result.
+1. `git tag <tagname> -a`
+1. `git push origin --tags`
+Or create the tag throuh the `Releases` page in github.
