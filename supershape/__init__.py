@@ -17,4 +17,4 @@ FLOWER = [7, 1, 1, 0.2, 1.7, 1.7]
 '''Predefined params of a cone-like object'''
 CONE = [[4, 1, 1, 100, 1, 1], [4, 1, 1, 1, 1, 1]]
 
-__VERSION__ = '1.1.0'
+__VERSION__ = '1.1.1'
